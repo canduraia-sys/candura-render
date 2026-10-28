@@ -53,6 +53,20 @@ describe("componentes de dados nos exemplos do catálogo", () => {
     expect(pedidos.at(-1)).toMatchObject({ semanas: 12 });
   });
 
+  it("badge sem valor mostra o traço, sem pílula vazia", async () => {
+    const mensagens = example("Table").map((m) => structuredClone(m));
+    const modelo = mensagens.find((m) => "updateDataModel" in m) as { updateDataModel: { value: Record<string, unknown[]> } };
+    const [chave, linhas] = Object.entries(modelo.updateDataModel.value).find(([, v]) => Array.isArray(v))!;
+    const primeira = linhas[0] as Record<string, unknown>;
+    const colunas = (mensagens.find((m) => "updateComponents" in m) as { updateComponents: { components: { component: string; columns?: { key: string; format?: string }[] }[] } })
+      .updateComponents.components.find((c) => c.component === "Table")!.columns!;
+    const vazias = Object.fromEntries(colunas.filter((c) => c.format === "badge").map((c) => [c.key, null]));
+    modelo.updateDataModel.value[chave] = [{ ...primeira, ...vazias }];
+    const { container } = render(<CanduraSurface messages={mensagens} allowedOrigins={ORIGINS} />);
+    await waitFor(() => expect(container.textContent).toContain("—"));
+    expect(container.querySelectorAll(".cd-badge")).toHaveLength(0);
+  });
+
   it("surface sem createSurface", () => {
     render(<CanduraSurface messages={[]} />);
     expect(screen.getByText("Surface sem createSurface.")).toBeTruthy();

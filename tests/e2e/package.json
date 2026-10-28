@@ -1,0 +1,15 @@
+{
+  "name": "@candura/a2ui-e2e-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ponta a ponta (Playwright): o app web abre a AdminBodyStrength servida pelo BodyStrength real com a semente.",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:update": "playwright test --update-snapshots"
+  },
+  "devDependencies": {
+    "@candura/a2ui-app": "workspace:*",
+    "@playwright/test": "1.64.1"
+  }
+}

@@ -23,6 +23,7 @@ function Cell({ column, value, allowedOrigins }: { column: Column; value: unknow
     case "date":
       return <>{formatDate(value)}</>;
     case "badge": {
+      if (value === null || value === undefined || value === "") return <>—</>;
       const badge = typeof value === "object" && value !== null ? (value as { text?: unknown; tone?: unknown }) : { text: value };
       return (
         <span className="cd-badge" data-tone={toneOf(badge.tone)}>

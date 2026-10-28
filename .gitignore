@@ -151,3 +151,6 @@ vite.config.ts.timestamp-*
 # Playwright
 test-results/
 playwright-report/
+
+# E2E: o servidor do BodyStrength grava aqui a publicação semeada
+tests/e2e/.servidor.json

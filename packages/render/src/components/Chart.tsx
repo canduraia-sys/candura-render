@@ -45,7 +45,11 @@ export const Chart = createComponentImplementation(ChartApi, ({ props }) => {
   const guide = reference ? (
     <ReferenceLine y={reference.value} label={reference.label} stroke={toneColor(toneOf(reference.tone, "warning"))} strokeDasharray="4 4" />
   ) : null;
-  const domain = (props.yDomain as [number, number] | undefined) ?? ["auto", "auto"];
+  // Barras e áreas medem a partir de zero (eixo truncado exagera diferenças); linhas acompanham os dados.
+  const baseline = props.variant === "bar" || props.variant === "horizontalBar" || props.variant === "area";
+  const domain = (props.yDomain as [number, number] | undefined) ?? (baseline ? [0, "auto"] : ["auto", "auto"]);
+  // Sem animação para quem pede menos movimento (e nos testes visuais, que emulam `reducedMotion: "reduce"`).
+  const animate = !(typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
   const axisWidth = props.unit || valueFormat === "currency" ? 76 : 52;
   let chart;
   switch (props.variant) {
@@ -53,7 +57,7 @@ export const Chart = createComponentImplementation(ChartApi, ({ props }) => {
       const [first] = series;
       chart = (
         <PieChart>
-          <Pie data={rows} dataKey={first?.key ?? "value"} nameKey={props.x} innerRadius={props.donut ? "55%" : 0} label={props.showValues}>
+          <Pie isAnimationActive={animate} data={rows} dataKey={first?.key ?? "value"} nameKey={props.x} innerRadius={props.donut ? "55%" : 0} label={props.showValues}>
             {rows.map((row, index) => (
               <Cell key={index} fill={toneColor(props.toneKey ? toneOf(row[props.toneKey]) : (SERIES_TONES[index % SERIES_TONES.length] ?? "primary"))} />
             ))}
@@ -70,7 +74,7 @@ export const Chart = createComponentImplementation(ChartApi, ({ props }) => {
           <PolarGrid />
           <PolarAngleAxis dataKey={props.x} />
           {series.map((s) => (
-            <Radar key={s.key} dataKey={s.key} name={s.label} stroke={s.color} fill={s.color} fillOpacity={0.25} />
+            <Radar isAnimationActive={animate} key={s.key} dataKey={s.key} name={s.label} stroke={s.color} fill={s.color} fillOpacity={0.25} />
           ))}
           {legend}
         </RadarChart>
@@ -84,7 +88,7 @@ export const Chart = createComponentImplementation(ChartApi, ({ props }) => {
           <YAxis tickFormatter={tick} domain={domain} width={axisWidth} />
           <Tooltip formatter={tick} labelFormatter={xTick} />
           {series.map((s) => (
-            <Area key={s.key} dataKey={s.key} name={s.label} stroke={s.color} fill={s.color} stackId={props.stacked ? "s" : undefined} connectNulls={props.connectNulls} />
+            <Area isAnimationActive={animate} key={s.key} dataKey={s.key} name={s.label} stroke={s.color} fill={s.color} stackId={props.stacked ? "s" : undefined} connectNulls={props.connectNulls} />
           ))}
           {guide}
           {legend}
@@ -101,7 +105,7 @@ export const Chart = createComponentImplementation(ChartApi, ({ props }) => {
           {horizontal ? <YAxis type="category" dataKey={props.x} width={120} /> : <YAxis tickFormatter={tick} domain={domain} width={axisWidth} />}
           <Tooltip formatter={tick} labelFormatter={xTick} />
           {series.map((s) => (
-            <Bar key={s.key} dataKey={s.key} name={s.label} fill={s.color} stackId={props.stacked ? "s" : undefined} label={props.showValues ? { position: horizontal ? "right" : "top" } : false}>
+            <Bar isAnimationActive={animate} key={s.key} dataKey={s.key} name={s.label} fill={s.color} stackId={props.stacked ? "s" : undefined} label={props.showValues ? { position: horizontal ? "right" : "top" } : false}>
               {props.toneKey ? rows.map((row, index) => <Cell key={index} fill={toneColor(toneOf(row[props.toneKey ?? ""]))} />) : null}
             </Bar>
           ))}
@@ -119,7 +123,7 @@ export const Chart = createComponentImplementation(ChartApi, ({ props }) => {
           <YAxis tickFormatter={tick} domain={domain} width={axisWidth} />
           <Tooltip formatter={tick} labelFormatter={xTick} />
           {series.map((s) => (
-            <Line key={s.key} dataKey={s.key} name={s.label} stroke={s.color} connectNulls={props.connectNulls} dot={false} />
+            <Line isAnimationActive={animate} key={s.key} dataKey={s.key} name={s.label} stroke={s.color} connectNulls={props.connectNulls} dot={false} />
           ))}
           {guide}
           {legend}
