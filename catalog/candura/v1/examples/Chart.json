@@ -1,0 +1,39 @@
+[
+  {"version": "v0.9.1", "createSurface": {"surfaceId": "example-chart", "catalogId": "https://candura.dev/a2ui/catalogs/candura/v1/catalog.json", "theme": {"primaryColor": "#ff7f6e", "surfaceColor": "#ffffff", "radius": "md"}}},
+  {"version": "v0.9.1", "updateComponents": {"surfaceId": "example-chart", "components": [
+    {"id": "root", "component": "Column", "children": ["c_cargas", "c_adesao", "c_volume", "c_autonomia", "c_maestria", "c_casuistica", "c_ajuda", "c_comportamentos"]},
+    {"id": "c_cargas", "component": "Chart", "variant": "line", "title": "Carga máxima por semana", "rows": {"path": "/cargas"}, "x": "semana", "y": ["Supino", "Agachamento", "Remada"], "connectNulls": true, "unit": "kg"},
+    {"id": "c_adesao", "component": "Chart", "variant": "bar", "title": "Adesão semanal", "rows": {"path": "/adesao"}, "x": "semana", "y": "adesao_pct", "toneKey": "tom", "reference": {"value": 100, "label": "Meta", "tone": "primary"}, "yDomain": [0, 120], "yFormat": "percent", "showValues": true},
+    {"id": "c_volume", "component": "Chart", "variant": "area", "title": "Volume semanal", "rows": {"path": "/volume"}, "x": "semana", "y": [{"key": "volume", "label": "Volume", "tone": "info"}], "unit": "kg"},
+    {"id": "c_autonomia", "component": "Chart", "variant": "bar", "title": "Autonomia vocal", "rows": {"path": "/operantes"}, "x": "operante", "y": [{"key": "independente", "label": "Independente", "tone": "success"}, {"key": "ajuda", "label": "Com ajuda", "tone": "primary"}], "stacked": true},
+    {"id": "c_maestria", "component": "Chart", "variant": "horizontalBar", "title": "Maestria de alvos", "rows": {"path": "/alvos"}, "x": "alvo", "y": "acertos", "yDomain": [0, 100], "yFormat": "percent", "legend": false},
+    {"id": "c_casuistica", "component": "Chart", "variant": "pie", "title": "Casuística por diagnóstico", "rows": {"path": "/diagnosticos"}, "x": "diagnostico", "y": "pacientes", "donut": true},
+    {"id": "c_ajuda", "component": "Chart", "variant": "radar", "title": "Níveis de ajuda", "rows": {"path": "/ajuda"}, "x": "nivel", "y": [{"key": "ocorrencias", "label": "Ocorrências"}]},
+    {"id": "c_comportamentos", "component": "Chart", "variant": "line", "title": "Evolução de comportamentos", "rows": {"path": "/comportamentos"}, "x": "data", "xFormat": "date", "height": "lg", "emptyText": "Sem registros no período."}
+  ]}},
+  {"version": "v0.9.1", "updateDataModel": {"surfaceId": "example-chart", "path": "/", "value": {
+    "cargas": [
+      {"semana": "S36", "Supino": 40, "Agachamento": 60, "Remada": 35},
+      {"semana": "S37", "Supino": 42, "Agachamento": null, "Remada": 35},
+      {"semana": "S38", "Supino": 42, "Agachamento": 65, "Remada": 37.5},
+      {"semana": "S39", "Supino": 45, "Agachamento": 67.5, "Remada": 40}
+    ],
+    "adesao": [
+      {"semana": "S36", "adesao_pct": 100, "tom": "success"},
+      {"semana": "S37", "adesao_pct": 75, "tom": "warning"},
+      {"semana": "S38", "adesao_pct": 100, "tom": "success"},
+      {"semana": "S39", "adesao_pct": 50, "tom": "danger"}
+    ],
+    "volume": [{"semana": "S36", "volume": 8400}, {"semana": "S37", "volume": 7650}, {"semana": "S38", "volume": 9120}, {"semana": "S39", "volume": 9800}],
+    "operantes": [{"operante": "Mando", "independente": 12, "ajuda": 5}, {"operante": "Tato", "independente": 8, "ajuda": 9}, {"operante": "Ecoico", "independente": 15, "ajuda": 2}],
+    "alvos": [{"alvo": "Contato visual", "acertos": 82}, {"alvo": "Imitação motora", "acertos": 64}, {"alvo": "Seguir instrução", "acertos": 47}],
+    "diagnosticos": [{"diagnostico": "TEA nível 1", "pacientes": 6}, {"diagnostico": "TEA nível 2", "pacientes": 4}, {"diagnostico": "TDAH", "pacientes": 3}],
+    "ajuda": [{"nivel": "Física total", "ocorrencias": 4}, {"nivel": "Física parcial", "ocorrencias": 7}, {"nivel": "Gestual", "ocorrencias": 12}, {"nivel": "Verbal", "ocorrencias": 9}, {"nivel": "Independente", "ocorrencias": 15}],
+    "comportamentos": [
+      {"data": "2026-09-07", "Autolesivo": 3, "Fuga de demanda": 5, "Birra": 4},
+      {"data": "2026-09-14", "Autolesivo": 2, "Fuga de demanda": 4, "Birra": 4},
+      {"data": "2026-09-21", "Autolesivo": 2, "Fuga de demanda": 2, "Birra": 3},
+      {"data": "2026-09-28", "Autolesivo": 1, "Fuga de demanda": 2, "Birra": 1}
+    ]
+  }}}
+]

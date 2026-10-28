@@ -1,0 +1,12 @@
+[
+  {"version": "v0.9.1", "createSurface": {"surfaceId": "example-markdown", "catalogId": "https://candura.dev/a2ui/catalogs/candura/v1/catalog.json", "theme": {"primaryColor": "#ff7f6e", "surfaceColor": "#ffffff", "radius": "md"}}},
+  {"version": "v0.9.1", "updateComponents": {"surfaceId": "example-markdown", "components": [
+    {"id": "root", "component": "Column", "children": ["m_metodologia", "m_avisos"]},
+    {"id": "m_metodologia", "component": "Markdown", "text": "**Adesão** = execuções concluídas ou parciais ÷ sessões planejadas da ficha ativa no período.\n\n- Fichas arquivadas não entram na média.\n- Execuções interrompidas não contam."},
+    {"id": "m_avisos", "component": "Markdown", "text": {"call": "formatString", "args": {"value": "_Período de ${/periodo/inicio} a ${/periodo/fim}._ ${/avisos}"}, "returnType": "string"}}
+  ]}},
+  {"version": "v0.9.1", "updateDataModel": {"surfaceId": "example-markdown", "path": "/", "value": {
+    "periodo": {"inicio": "2026-08-31", "fim": "2026-10-26"},
+    "avisos": "Dados cortados em 2 000 execuções."
+  }}}
+]

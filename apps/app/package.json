@@ -1,0 +1,28 @@
+{
+  "name": "@candura/a2ui-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "App web mínimo: alvo dos links de view (/views/{token}, /p/{id}) e dos testes visuais e E2E.",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "echo 'app: coberto pelos testes visuais e E2E' && exit 0"
+  },
+  "dependencies": {
+    "@candura/a2ui-render-shadcn": "workspace:*",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.3.3",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3",
+    "vite": "8.3.5"
+  }
+}

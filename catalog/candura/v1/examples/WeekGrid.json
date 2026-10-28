@@ -1,0 +1,29 @@
+[
+  {"version": "v0.9.1", "createSurface": {"surfaceId": "example-weekgrid", "catalogId": "https://candura.dev/a2ui/catalogs/candura/v1/catalog.json", "theme": {"primaryColor": "#ff7f6e", "surfaceColor": "#ffffff", "radius": "md"}}},
+  {"version": "v0.9.1", "updateComponents": {"surfaceId": "example-weekgrid", "components": [
+    {"id": "root", "component": "Card", "child": "agenda"},
+    {"id": "agenda", "component": "WeekGrid", "title": "Agenda semanal", "days": {"path": "/agenda_semanal"}, "today": {"path": "/hoje"}, "collapsible": true, "statuses": [
+      {"value": "agendado", "label": "Agendado", "tone": "info"},
+      {"value": "realizado", "label": "Atendeu", "tone": "success"},
+      {"value": "falta", "label": "Faltou", "tone": "danger"},
+      {"value": "cancelado", "label": "Cancelou", "tone": "warning"},
+      {"value": "livre", "label": "Livre", "tone": "neutral", "occupied": false}
+    ]}
+  ]}},
+  {"version": "v0.9.1", "updateDataModel": {"surfaceId": "example-weekgrid", "path": "/", "value": {
+    "hoje": "Segunda",
+    "agenda_semanal": [
+      {"label": "Segunda", "date": "2026-10-26", "slots": [
+        {"time": "08:00", "status": "realizado", "label": "Lucas"},
+        {"time": "09:00", "status": "falta", "label": "Marina"},
+        {"time": "10:00", "status": "livre"},
+        {"time": "14:00", "status": "agendado", "label": "Pedro"}
+      ]},
+      {"label": "Terça", "date": "2026-10-27", "slots": [
+        {"time": "08:00", "status": "agendado", "label": "Sofia"},
+        {"time": "09:00", "status": "cancelado", "label": "Theo", "description": "Remarcado para quinta"},
+        {"time": "10:00", "status": "livre"}
+      ]}
+    ]
+  }}}
+]

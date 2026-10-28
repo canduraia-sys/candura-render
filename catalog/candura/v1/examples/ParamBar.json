@@ -1,0 +1,16 @@
+[
+  {"version": "v0.9.1", "createSurface": {"surfaceId": "example-parambar", "catalogId": "https://candura.dev/a2ui/catalogs/candura/v1/catalog.json", "theme": {"primaryColor": "#ff7f6e", "surfaceColor": "#ffffff", "radius": "md"}}},
+  {"version": "v0.9.1", "updateComponents": {"surfaceId": "example-parambar", "components": [
+    {"id": "root", "component": "Column", "children": ["params", "params_snapshot", "orientacao"]},
+    {"id": "params", "component": "ParamBar", "params": [
+      {"name": "semanas", "label": "Período", "type": "integer", "value": 8, "options": [{"label": "4 semanas", "value": 4}, {"label": "8 semanas", "value": 8}, {"label": "12 semanas", "value": 12}, {"label": "26 semanas", "value": 26}]},
+      {"name": "aluno_id", "label": "Aluno", "type": "string", "value": "", "options": [{"label": "Todos", "value": ""}, {"label": "Ana", "value": "a1"}, {"label": "Bruno", "value": "a2"}]},
+      {"name": "paciente_id", "label": "Paciente", "type": "string", "required": true, "value": null, "options": [{"label": "Lucas", "value": "p9"}, {"label": "Marina", "value": "p10"}]}
+    ]},
+    {"id": "params_snapshot", "component": "ParamBar", "disabled": true, "params": [
+      {"name": "semanas", "label": "Período", "type": "integer", "value": 12}
+    ]},
+    {"id": "orientacao", "component": "Text", "text": "Escolha um paciente para ver o relatório.", "variant": "caption"}
+  ]}},
+  {"version": "v0.9.1", "updateDataModel": {"surfaceId": "example-parambar", "path": "/", "value": {}}}
+]

@@ -1,0 +1,29 @@
+Regras do catálogo Candura v1 (catalogId https://candura.dev/a2ui/catalogs/candura/v1/catalog.json)
+Protocolo A2UI v0.9 (mensagens com "version": "v0.9.1"). Valem para views escritas à mão (JSONL) e, na 0.3.3, para o agente gerador.
+
+ESTRUTURA
+1. A view é uma lista plana de componentes {"id", "component", ...propriedades}. A árvore se forma por referência: "children" (lista de ids), "child" (um id). A raiz tem id "root".
+2. Todo componente referenciado existe, e todo componente é alcançável a partir de "root". Referência pendente ou componente órfão invalida a view.
+3. Ids são únicos na view, curtos e descritivos ("k_adesao", "t_alunos").
+4. Só existem os componentes do catálogo: os do Basic (Text, Image, Icon, Video, AudioPlayer, Row, Column, List, Card, Tabs, Modal, Divider, Button, TextField, CheckBox, ChoicePicker, Slider, DateTimeInput) e os Candura (Chart, Table, Stat, Badge, Timeline, WeekGrid, Markdown, Link, ParamBar). Propriedade fora do esquema invalida o componente.
+
+DADOS
+5. A view nunca carrega dados de exibição. Valores vêm do modelo de dados por binding: {"path": "/resumo/adesao_media_pct"} (JSON Pointer, RFC 6901).
+6. Dentro do template de um List, caminhos sem "/" inicial são relativos ao item ("nome", "."). Fora de templates, use sempre caminhos absolutos.
+7. Texto com valores do modelo usa a função formatString: {"call": "formatString", "args": {"value": "De ${/periodo/inicio} a ${/periodo/fim}"}, "returnType": "string"}. Chaves soltas como "{periodo.inicio}" não são interpoladas.
+8. Chart, Table, Timeline e WeekGrid recebem listas por binding ("rows", "items", "days"). Chart usa linhas: uma por ponto do eixo x, uma chave por série ([{"semana": "S1", "Supino": 40}]).
+9. Chart sem "y" desenha toda chave numérica da linha exceto "x" (séries dinâmicas). Com "y", declare as séries por chave ou por {key, label, tone}.
+
+APARÊNCIA
+10. Nenhum CSS, HTML, cor, fonte ou URL de script na view. Cores vêm do tema (createSurface.theme: primaryColor, surfaceColor, radius) e dos tons semânticos: neutral, primary, success, warning, danger, info.
+11. Markdown é sanitizado pelo renderer: sem HTML, sem imagens externas, sem script.
+12. Tamanho de gráfico é "height": sm, md ou lg; nunca pixels.
+
+NAVEGAÇÃO E INTERAÇÃO
+13. Link aponta para outra view ("view": "view:///global:<namespace>/<Nome>", com "params" opcionais) ou para um endereço externo ("href", só origens permitidas pelo perfil). Nunca os dois. O servidor resolve "view" num link assinado com o tenant e o principal do pedido.
+14. Célula de Table com format "link" recebe {"label", "view", "params"} ou {"label", "href"}; com format "badge", texto ou {"text", "tone"}.
+15. ParamBar é gerada pelo módulo a partir dos "params" do cabeçalho da view; não a escreva à mão. Cada seleção refaz o GET da mesma rota com a query alterada.
+16. Nesta versão do SDK não há ações de volta ao servidor: Button só com functionCall local (por exemplo openUrl). Formulários que gravam dados e Button com action.event chegam na 0.3.3.
+
+EVOLUÇÃO
+17. O catálogo muda só de forma aditiva: componente ou propriedade nova entra; nada sai sem ser marcado "deprecated" antes. Uma mudança incompatível é um catálogo novo (candura/v2), com outro catalogId.

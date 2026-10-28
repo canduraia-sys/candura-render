@@ -1,0 +1,96 @@
+/*
+ * Visual do renderizador Candura (shadcn/Tailwind): tokens do tema em variáveis CSS (`--cd-primary`, `--cd-surface`,
+ * `--cd-radius`, vindos do createSurface.theme) e os tons semânticos. A view nunca traz cor nem CSS.
+ */
+@import "tailwindcss";
+
+.cd-surface {
+  --cd-primary: #ff7f6e;
+  --cd-surface: #ffffff;
+  --cd-radius: 8px;
+  --cd-text: #18181b;
+  --cd-muted: #71717a;
+  --cd-border: #e4e4e7;
+  --cd-tone-neutral: #71717a;
+  --cd-tone-primary: var(--cd-primary);
+  --cd-tone-success: #16a34a;
+  --cd-tone-warning: #d97706;
+  --cd-tone-danger: #dc2626;
+  --cd-tone-info: #2563eb;
+  --a2ui-color-primary: var(--cd-primary);
+  color: var(--cd-text);
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cd-card {
+  background: var(--cd-surface);
+  border: 1px solid var(--cd-border);
+  border-radius: var(--cd-radius);
+  padding: 1rem;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+}
+
+[data-tone="neutral"] { --cd-tone: var(--cd-tone-neutral); }
+[data-tone="primary"] { --cd-tone: var(--cd-tone-primary); }
+[data-tone="success"] { --cd-tone: var(--cd-tone-success); }
+[data-tone="warning"] { --cd-tone: var(--cd-tone-warning); }
+[data-tone="danger"] { --cd-tone: var(--cd-tone-danger); }
+[data-tone="info"] { --cd-tone: var(--cd-tone-info); }
+
+.cd-stat { display: flex; flex-direction: column; gap: 0.25rem; min-width: 8.5rem; flex: 1 1 8.5rem; }
+
+/* Linhas do Basic quebram em telas estreitas: os indicadores vão para a linha de baixo em vez de transbordar. */
+.cd-surface a2ui-basic-row { flex-wrap: wrap; }
+.cd-stat-label, .cd-caption { color: var(--cd-muted); font-size: 0.8125rem; }
+.cd-stat-value { font-size: clamp(1.25rem, 5vw, 1.75rem); font-weight: 600; line-height: 1.1; white-space: nowrap; }
+@media (max-width: 480px) {
+  .cd-card { padding: 0.75rem; }
+  .cd-stat-label, .cd-caption { font-size: 0.75rem; }
+}
+.cd-tone-text { color: var(--cd-tone, var(--cd-muted)); font-size: 0.875rem; }
+
+.cd-badge {
+  display: inline-flex; align-items: center; padding: 0.125rem 0.5rem; border-radius: 999px; font-size: 0.75rem;
+  font-weight: 500; color: var(--cd-tone, var(--cd-tone-neutral));
+  background: color-mix(in srgb, var(--cd-tone, var(--cd-tone-neutral)) 12%, transparent);
+}
+
+.cd-table-wrap { overflow-x: auto; padding: 0; }
+.cd-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.cd-table th { text-align: left; color: var(--cd-muted); font-weight: 500; padding: 0.625rem 0.75rem; border-bottom: 1px solid var(--cd-border); }
+.cd-table td { padding: 0.625rem 0.75rem; border-bottom: 1px solid var(--cd-border); }
+.cd-table [data-align="right"] { text-align: right; }
+.cd-table [data-align="center"] { text-align: center; }
+.cd-table [data-width="narrow"] { width: 6rem; }
+.cd-pager { display: flex; gap: 0.75rem; align-items: center; justify-content: flex-end; padding: 0.5rem 0.75rem; }
+.cd-pager button, .cd-parambar button {
+  border: 1px solid var(--cd-border); border-radius: var(--cd-radius); padding: 0.25rem 0.75rem; background: var(--cd-surface);
+}
+
+.cd-chart { margin: 0; }
+.cd-chart-title { font-weight: 600; margin-bottom: 0.5rem; }
+
+.cd-timeline { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+.cd-timeline-item { border-left: 3px solid var(--cd-tone, var(--cd-border)); padding-left: 0.75rem; display: flex; flex-direction: column; }
+
+.cd-week { display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr)); gap: 0.5rem; }
+.cd-week-day h4 { font-size: 0.8125rem; margin: 0 0 0.25rem; }
+.cd-week-day[data-today="true"] h4 { color: var(--cd-primary); }
+.cd-week-slot {
+  display: flex; flex-direction: column; font-size: 0.75rem; padding: 0.25rem 0.375rem; margin-bottom: 0.25rem;
+  border-radius: calc(var(--cd-radius) / 2); background: color-mix(in srgb, var(--cd-tone, var(--cd-tone-neutral)) 14%, transparent);
+}
+
+.cd-markdown :where(p, ul, ol) { margin: 0.25rem 0; }
+.cd-link { color: var(--cd-primary); text-decoration: underline; text-underline-offset: 2px; }
+.cd-link-disabled { color: var(--cd-muted); }
+
+.cd-parambar { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: flex-end; }
+.cd-param { display: flex; flex-direction: column; font-size: 0.8125rem; gap: 0.25rem; }
+.cd-param :where(select, input) { border: 1px solid var(--cd-border); border-radius: var(--cd-radius); padding: 0.375rem 0.5rem; background: var(--cd-surface); }
+
+.cd-empty, .cd-loading { color: var(--cd-muted); }
+.cd-error { color: var(--cd-tone-danger); }

@@ -1,0 +1,17 @@
+[
+  {"version": "v0.9.1", "createSurface": {"surfaceId": "example-timeline", "catalogId": "https://candura.dev/a2ui/catalogs/candura/v1/catalog.json", "theme": {"primaryColor": "#ff7f6e", "surfaceColor": "#ffffff", "radius": "md"}}},
+  {"version": "v0.9.1", "updateComponents": {"surfaceId": "example-timeline", "components": [
+    {"id": "root", "component": "Column", "children": ["tl_execucoes", "tl_sessoes"]},
+    {"id": "tl_execucoes", "component": "Timeline", "items": {"path": "/execucoes_recentes"}, "emptyText": "Nenhuma execução no período."},
+    {"id": "tl_sessoes", "component": "Timeline", "items": [
+      {"at": "2026-10-22T14:00:00Z", "title": "Sessão com Lucas", "description": "50 min · foco 78%", "icon": "check", "tone": "success", "bullets": ["Mando com ajuda gestual", "Ecoico independente"]},
+      {"at": "2026-10-20T15:00:00Z", "title": "Sessão com Lucas", "description": "45 min", "icon": "alert", "tone": "danger", "bullets": ["Fuga de demanda (2x)"]}
+    ]}
+  ]}},
+  {"version": "v0.9.1", "updateDataModel": {"surfaceId": "example-timeline", "path": "/", "value": {
+    "execucoes_recentes": [
+      {"at": "2026-10-24T18:40:00Z", "title": "Ana · Treino A - Peito e Tríceps", "description": "62 min · RPE 8", "tone": "success", "icon": "check", "bullets": ["8 exercícios", "1 omitido: Crucifixo"]},
+      {"at": "2026-10-20T07:10:00Z", "title": "Bruno · Treino B - Costas", "description": "Interrompido aos 25 min", "tone": "warning", "icon": "alert", "bullets": ["3 de 7 exercícios"]}
+    ]
+  }}}
+]

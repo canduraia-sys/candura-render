@@ -1,0 +1,12 @@
+[
+  {"version": "v0.9.1", "createSurface": {"surfaceId": "example-link", "catalogId": "https://candura.dev/a2ui/catalogs/candura/v1/catalog.json", "theme": {"primaryColor": "#ff7f6e", "surfaceColor": "#ffffff", "radius": "md"}}},
+  {"version": "v0.9.1", "updateComponents": {"surfaceId": "example-link", "components": [
+    {"id": "root", "component": "Row", "children": ["l_publicacoes", "l_evolucao", "l_guia"]},
+    {"id": "l_publicacoes", "component": "Link", "label": "Relatórios publicados", "view": "view:///global:candura/Publicacoes", "params": {"category": "report"}},
+    {"id": "l_evolucao", "component": "Link", "label": {"path": "/aluno/rotulo"}, "view": "view:///global:bodystrength/EvolucaoAluno", "params": {"aluno_id": {"path": "/aluno/id"}, "semanas": 8}},
+    {"id": "l_guia", "component": "Link", "label": "Guia da adesão", "href": "https://candura.dev/guia/adesao"}
+  ]}},
+  {"version": "v0.9.1", "updateDataModel": {"surfaceId": "example-link", "path": "/", "value": {
+    "aluno": {"id": "a1", "rotulo": "Evolução da Ana"}
+  }}}
+]

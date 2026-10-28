@@ -1,0 +1,22 @@
+[
+  {"version": "v0.9.1", "createSurface": {"surfaceId": "example-table", "catalogId": "https://candura.dev/a2ui/catalogs/candura/v1/catalog.json", "theme": {"primaryColor": "#ff7f6e", "surfaceColor": "#ffffff", "radius": "md"}}},
+  {"version": "v0.9.1", "updateComponents": {"surfaceId": "example-table", "components": [
+    {"id": "root", "component": "Card", "child": "t_alunos"},
+    {"id": "t_alunos", "component": "Table", "rows": {"path": "/alunos"}, "pageSize": 20, "sort": {"key": "nome"}, "emptyText": "Nenhum aluno cadastrado.", "columns": [
+      {"key": "nome", "label": "Aluno", "width": "wide"},
+      {"key": "nivel", "label": "Nível", "format": "badge"},
+      {"key": "treino_status", "label": "Ficha", "format": "badge"},
+      {"key": "execucoes", "label": "Execuções", "format": "number", "align": "right", "width": "narrow"},
+      {"key": "adesao_pct", "label": "Adesão", "format": "percent", "align": "right", "width": "narrow"},
+      {"key": "ultima_execucao", "label": "Última", "format": "date"},
+      {"key": "evolucao", "label": "", "format": "link"}
+    ]}
+  ]}},
+  {"version": "v0.9.1", "updateDataModel": {"surfaceId": "example-table", "path": "/", "value": {
+    "alunos": [
+      {"nome": "Ana", "nivel": "INTERMEDIARIO", "treino_status": {"text": "ATIVO", "tone": "success"}, "execucoes": 26, "adesao_pct": 81.3, "ultima_execucao": "2026-10-24", "evolucao": {"label": "Evolução", "view": "view:///global:bodystrength/EvolucaoAluno", "params": {"aluno_id": "a1", "semanas": 8}}},
+      {"nome": "Bruno", "nivel": "INICIANTE", "treino_status": {"text": "ATIVO", "tone": "success"}, "execucoes": 9, "adesao_pct": 44.4, "ultima_execucao": "2026-10-20", "evolucao": {"label": "Evolução", "view": "view:///global:bodystrength/EvolucaoAluno", "params": {"aluno_id": "a2", "semanas": 8}}},
+      {"nome": "Carla", "nivel": "AVANCADO", "treino_status": {"text": "ARQUIVADO", "tone": "neutral"}, "execucoes": 0, "adesao_pct": null, "ultima_execucao": null, "evolucao": {"label": "Guia", "href": "https://candura.dev/guia"}}
+    ]
+  }}}
+]

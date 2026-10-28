@@ -1,0 +1,408 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://candura.dev/a2ui/catalogs/candura/v1/catalog.json",
+  "catalogId": "https://candura.dev/a2ui/catalogs/candura/v1/catalog.json",
+  "title": "Candura v1",
+  "description": "Catálogo Candura v1 (REQ-A2UI-02): o catálogo Basic do A2UI v0.9 por inteiro, por referência, mais os componentes de dados Chart, Table, Stat, Badge, Timeline, WeekGrid, Markdown, Link e ParamBar. Fonte única: o renderer recebe uma cópia por script (_scripts/a2ui_publish_catalog.py). Evolução aditiva; nada sai sem 'deprecated' antes.",
+  "components": {
+    "Text": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/components/Text"},
+    "Image": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/components/Image"},
+    "Icon": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/components/Icon"},
+    "Video": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/components/Video"},
+    "AudioPlayer": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/components/AudioPlayer"},
+    "Row": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/components/Row"},
+    "Column": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/components/Column"},
+    "List": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/components/List"},
+    "Card": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/components/Card"},
+    "Tabs": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/components/Tabs"},
+    "Modal": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/components/Modal"},
+    "Divider": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/components/Divider"},
+    "Button": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/components/Button"},
+    "TextField": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/components/TextField"},
+    "CheckBox": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/components/CheckBox"},
+    "ChoicePicker": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/components/ChoicePicker"},
+    "Slider": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/components/Slider"},
+    "DateTimeInput": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/components/DateTimeInput"},
+
+    "Chart": {
+      "type": "object",
+      "description": "Gráfico sobre linhas de dados (uma linha por ponto do eixo x; uma coluna por série). Cores vêm do tema, na ordem das séries; nunca da view.",
+      "allOf": [
+        {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentCommon"},
+        {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/$defs/CatalogComponentCommon"},
+        {
+          "type": "object",
+          "properties": {
+            "component": {"const": "Chart"},
+            "variant": {"type": "string", "enum": ["line", "area", "bar", "horizontalBar", "pie", "radar"], "description": "Forma do gráfico. Empilhamento é a propriedade 'stacked' (bar, horizontalBar, area); donut é 'donut' (pie)."},
+            "title": {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"},
+            "rows": {"$ref": "#/$defs/DynamicRows", "description": "Linhas de dados, em geral um binding: [{\"semana\": \"S1\", \"Supino\": 40, \"Agachamento\": 60}]."},
+            "x": {"type": "string", "description": "Chave da categoria em cada linha (eixo x; fatia em pie; eixo angular em radar)."},
+            "y": {"description": "Séries: uma chave, ou uma lista de chaves ou de SeriesSpec. Ausente: toda chave numérica da linha exceto 'x' (séries dinâmicas).", "oneOf": [{"type": "string"}, {"type": "array", "minItems": 1, "items": {"oneOf": [{"type": "string"}, {"$ref": "#/$defs/SeriesSpec"}]}}]},
+            "stacked": {"type": "boolean", "default": false, "description": "Empilha as séries (bar, horizontalBar, area)."},
+            "donut": {"type": "boolean", "default": false, "description": "Pizza com furo central (pie)."},
+            "legend": {"type": "boolean", "default": true, "description": "Mostra a legenda; o renderer permite esconder séries clicando nela."},
+            "connectNulls": {"type": "boolean", "default": false, "description": "Liga os pontos através de valores ausentes (line, area)."},
+            "showValues": {"type": "boolean", "default": false, "description": "Anota o valor sobre cada barra ou ponto."},
+            "toneKey": {"type": "string", "description": "Chave da linha com o tom de cada ponto (Tone); vale para bar e horizontalBar com uma série."},
+            "reference": {"$ref": "#/$defs/ChartReference"},
+            "yDomain": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2, "description": "Limites [mínimo, máximo] do eixo de valores."},
+            "yFormat": {"type": "string", "enum": ["number", "percent", "currency"], "default": "number"},
+            "unit": {"type": "string", "description": "Sufixo dos valores (\"kg\", \"min\")."},
+            "xFormat": {"type": "string", "enum": ["category", "date"], "default": "category", "description": "'date' formata valores ISO 8601 do eixo x no locale do renderer."},
+            "height": {"type": "string", "enum": ["sm", "md", "lg"], "default": "md"},
+            "emptyText": {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"}
+          },
+          "required": ["component", "variant", "rows", "x"]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+
+    "Table": {
+      "type": "object",
+      "description": "Tabela paginada sobre linhas de dados; a formatação de cada coluna é declarada, nunca estilizada.",
+      "allOf": [
+        {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentCommon"},
+        {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/$defs/CatalogComponentCommon"},
+        {
+          "type": "object",
+          "properties": {
+            "component": {"const": "Table"},
+            "rows": {"$ref": "#/$defs/DynamicRows"},
+            "columns": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/TableColumn"}},
+            "pageSize": {"type": "integer", "minimum": 1, "default": 20},
+            "sort": {"$ref": "#/$defs/TableSort"},
+            "emptyText": {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"}
+          },
+          "required": ["component", "rows", "columns"]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+
+    "Stat": {
+      "type": "object",
+      "description": "Indicador (KPI): rótulo, valor e, opcionalmente, variação, tendência, tom e legenda.",
+      "allOf": [
+        {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentCommon"},
+        {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/$defs/CatalogComponentCommon"},
+        {
+          "type": "object",
+          "properties": {
+            "component": {"const": "Stat"},
+            "label": {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"},
+            "value": {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicValue"},
+            "format": {"type": "string", "enum": ["number", "percent", "currency", "text"], "default": "number"},
+            "unit": {"type": "string"},
+            "delta": {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString", "description": "Variação já formatada (\"+4.2 pp\")."},
+            "trend": {"$ref": "#/$defs/DynamicTrend"},
+            "tone": {"$ref": "#/$defs/DynamicTone"},
+            "caption": {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString", "description": "Linha de apoio (\"Meta 80%\")."}
+          },
+          "required": ["component", "label", "value"]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+
+    "Badge": {
+      "type": "object",
+      "description": "Etiqueta curta com tom.",
+      "allOf": [
+        {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentCommon"},
+        {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/$defs/CatalogComponentCommon"},
+        {
+          "type": "object",
+          "properties": {
+            "component": {"const": "Badge"},
+            "text": {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"},
+            "tone": {"$ref": "#/$defs/DynamicTone"}
+          },
+          "required": ["component", "text"]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+
+    "Timeline": {
+      "type": "object",
+      "description": "Lista cronológica de eventos (mais recente primeiro).",
+      "allOf": [
+        {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentCommon"},
+        {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/$defs/CatalogComponentCommon"},
+        {
+          "type": "object",
+          "properties": {
+            "component": {"const": "Timeline"},
+            "items": {"oneOf": [{"type": "array", "items": {"$ref": "#/$defs/TimelineItem"}}, {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DataBinding"}]},
+            "emptyText": {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"}
+          },
+          "required": ["component", "items"]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+
+    "WeekGrid": {
+      "type": "object",
+      "description": "Agenda semanal: dias com horários, cada horário com um estado declarado em 'statuses'.",
+      "allOf": [
+        {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentCommon"},
+        {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/$defs/CatalogComponentCommon"},
+        {
+          "type": "object",
+          "properties": {
+            "component": {"const": "WeekGrid"},
+            "title": {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"},
+            "days": {"oneOf": [{"type": "array", "items": {"$ref": "#/$defs/WeekDay"}}, {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DataBinding"}]},
+            "statuses": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/WeekStatus"}},
+            "today": {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString", "description": "Rótulo do dia destacado e resumido quando recolhido."},
+            "collapsible": {"type": "boolean", "default": true, "description": "Começa recolhido, mostrando só o resumo de 'today'."}
+          },
+          "required": ["component", "days", "statuses"]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+
+    "Markdown": {
+      "type": "object",
+      "description": "Texto em Markdown, sanitizado pelo renderer (sem HTML, sem script).",
+      "allOf": [
+        {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentCommon"},
+        {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/$defs/CatalogComponentCommon"},
+        {
+          "type": "object",
+          "properties": {
+            "component": {"const": "Markdown"},
+            "text": {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"}
+          },
+          "required": ["component", "text"]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+
+    "Link": {
+      "type": "object",
+      "description": "Navegação para outra view (o servidor resolve 'view' + 'params' num link assinado) ou para um endereço externo ('href', só origens permitidas).",
+      "allOf": [
+        {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentCommon"},
+        {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/$defs/CatalogComponentCommon"},
+        {
+          "type": "object",
+          "properties": {
+            "component": {"const": "Link"},
+            "label": {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"},
+            "view": {"$ref": "#/$defs/ViewUri"},
+            "params": {"$ref": "#/$defs/ViewParams"},
+            "href": {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString"}
+          },
+          "required": ["component", "label"],
+          "oneOf": [
+            {"required": ["view"], "not": {"required": ["href"]}},
+            {"required": ["href"], "not": {"anyOf": [{"required": ["view"]}, {"required": ["params"]}]}}
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+
+    "ParamBar": {
+      "type": "object",
+      "description": "Barra de parâmetros da view, gerada pelo módulo a partir do cabeçalho do JSONL (não se escreve à mão). Cada seleção refaz o GET da mesma rota com a query alterada; nunca é uma ação.",
+      "allOf": [
+        {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentCommon"},
+        {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/$defs/CatalogComponentCommon"},
+        {
+          "type": "object",
+          "properties": {
+            "component": {"const": "ParamBar"},
+            "params": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/ParamField"}},
+            "submit": {"type": "string", "description": "Rótulo do botão de aplicar; ausente, cada mudança aplica na hora."},
+            "disabled": {"type": "boolean", "default": false, "description": "Barra só de leitura (publicação snapshot)."}
+          },
+          "required": ["component", "params"]
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  },
+
+  "functions": {
+    "required": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/functions/required"},
+    "regex": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/functions/regex"},
+    "length": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/functions/length"},
+    "numeric": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/functions/numeric"},
+    "email": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/functions/email"},
+    "formatString": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/functions/formatString"},
+    "formatNumber": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/functions/formatNumber"},
+    "formatCurrency": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/functions/formatCurrency"},
+    "formatDate": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/functions/formatDate"},
+    "pluralize": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/functions/pluralize"},
+    "openUrl": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/functions/openUrl"},
+    "and": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/functions/and"},
+    "or": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/functions/or"},
+    "not": {"$ref": "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json#/functions/not"}
+  },
+
+  "$defs": {
+    "theme": {
+      "type": "object",
+      "description": "Tema mínimo do perfil de renderer (Q9), em createSurface.theme. Tipografia, tons e o restante ficam no pacote npm.",
+      "properties": {
+        "primaryColor": {"type": "string", "pattern": "^#[0-9a-fA-F]{6}$", "description": "Cor de destaque (mesmo nome do tema Basic)."},
+        "surfaceColor": {"type": "string", "pattern": "^#[0-9a-fA-F]{6}$", "description": "Cor de fundo dos cartões."},
+        "radius": {"type": "string", "enum": ["none", "sm", "md", "lg"], "description": "Arredondamento dos cantos."}
+      },
+      "additionalProperties": false
+    },
+    "Tone": {"type": "string", "enum": ["neutral", "primary", "success", "warning", "danger", "info"], "description": "Tom semântico; a cor de cada tom é do tema do renderer."},
+    "DynamicTone": {"oneOf": [{"$ref": "#/$defs/Tone"}, {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DataBinding"}]},
+    "Trend": {"type": "string", "enum": ["up", "down", "flat"]},
+    "DynamicTrend": {"oneOf": [{"$ref": "#/$defs/Trend"}, {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DataBinding"}]},
+    "DynamicRows": {"description": "Lista de objetos: literal ou binding para um array do modelo de dados.", "oneOf": [{"type": "array", "items": {"type": "object"}}, {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DataBinding"}]},
+    "SeriesSpec": {
+      "type": "object",
+      "properties": {
+        "key": {"type": "string", "description": "Chave da série em cada linha."},
+        "label": {"type": "string", "description": "Nome na legenda e no tooltip."},
+        "tone": {"$ref": "#/$defs/Tone"}
+      },
+      "required": ["key"],
+      "additionalProperties": false
+    },
+    "ChartReference": {
+      "type": "object",
+      "description": "Linha de referência no eixo de valores (meta, limite).",
+      "properties": {
+        "value": {"type": "number"},
+        "label": {"type": "string"},
+        "tone": {"$ref": "#/$defs/Tone"}
+      },
+      "required": ["value"],
+      "additionalProperties": false
+    },
+    "TableColumn": {
+      "type": "object",
+      "properties": {
+        "key": {"type": "string"},
+        "label": {"type": "string"},
+        "format": {"type": "string", "enum": ["text", "number", "percent", "date", "badge", "link"], "default": "text", "description": "'badge': a célula é texto (ou {text, tone}); 'link': a célula é LinkTarget."},
+        "align": {"type": "string", "enum": ["left", "center", "right"], "default": "left"},
+        "width": {"type": "string", "enum": ["auto", "narrow", "wide"], "default": "auto"}
+      },
+      "required": ["key", "label"],
+      "additionalProperties": false
+    },
+    "TableSort": {
+      "type": "object",
+      "properties": {
+        "key": {"type": "string"},
+        "descending": {"type": "boolean", "default": false}
+      },
+      "required": ["key"],
+      "additionalProperties": false
+    },
+    "LinkTarget": {
+      "description": "Valor de uma célula 'link' do modelo de dados: outra view (resolvida pelo servidor em link assinado) ou endereço externo.",
+      "oneOf": [
+        {"type": "object", "properties": {"label": {"type": "string"}, "view": {"$ref": "#/$defs/ViewUri"}, "params": {"type": "object"}}, "required": ["label", "view"], "additionalProperties": false},
+        {"type": "object", "properties": {"label": {"type": "string"}, "href": {"type": "string"}}, "required": ["label", "href"], "additionalProperties": false}
+      ]
+    },
+    "ViewUri": {"type": "string", "pattern": "^view:///[^/]+/[^/]+", "description": "URI do registry: view:///{tenant|global}:{namespace}/{Nome}."},
+    "ViewParams": {"type": "object", "additionalProperties": {"$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicValue"}, "description": "Parâmetros que o link fixa na view de destino (literais ou bindings)."},
+    "TimelineItem": {
+      "type": "object",
+      "properties": {
+        "at": {"type": "string", "description": "Instante ISO 8601."},
+        "title": {"type": "string"},
+        "description": {"type": "string"},
+        "icon": {"type": "string", "description": "Nome de ícone do tema (\"check\", \"alert\")."},
+        "tone": {"$ref": "#/$defs/Tone"},
+        "bullets": {"type": "array", "items": {"type": "string"}}
+      },
+      "required": ["at", "title"],
+      "additionalProperties": false
+    },
+    "WeekDay": {
+      "type": "object",
+      "properties": {
+        "label": {"type": "string", "description": "\"Segunda\", \"Seg 26/10\"."},
+        "date": {"type": "string", "description": "Data ISO 8601 (opcional)."},
+        "slots": {"type": "array", "items": {"$ref": "#/$defs/WeekSlot"}}
+      },
+      "required": ["label", "slots"],
+      "additionalProperties": false
+    },
+    "WeekSlot": {
+      "type": "object",
+      "properties": {
+        "time": {"type": "string", "description": "\"14:00\"."},
+        "status": {"type": "string", "description": "Um dos 'value' de WeekGrid.statuses."},
+        "label": {"type": "string", "description": "Quem ou o quê ocupa o horário."},
+        "description": {"type": "string"}
+      },
+      "required": ["time", "status"],
+      "additionalProperties": false
+    },
+    "WeekStatus": {
+      "type": "object",
+      "properties": {
+        "value": {"type": "string"},
+        "label": {"type": "string"},
+        "tone": {"$ref": "#/$defs/Tone"},
+        "occupied": {"type": "boolean", "default": true, "description": "Conta como sessão no resumo e mostra o 'label' do horário."}
+      },
+      "required": ["value", "label"],
+      "additionalProperties": false
+    },
+    "ParamOption": {
+      "type": "object",
+      "properties": {
+        "label": {"type": "string"},
+        "value": {"type": ["string", "number", "boolean"]}
+      },
+      "required": ["label", "value"],
+      "additionalProperties": false
+    },
+    "ParamField": {
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "label": {"type": "string"},
+        "type": {"type": "string", "enum": ["string", "integer", "number", "boolean", "date"]},
+        "required": {"type": "boolean", "default": false},
+        "value": {"type": ["string", "number", "boolean", "null"]},
+        "options": {"type": "array", "items": {"$ref": "#/$defs/ParamOption"}}
+      },
+      "required": ["name", "type"],
+      "additionalProperties": false
+    },
+    "anyComponent": {
+      "oneOf": [
+        {"$ref": "#/components/Text"}, {"$ref": "#/components/Image"}, {"$ref": "#/components/Icon"},
+        {"$ref": "#/components/Video"}, {"$ref": "#/components/AudioPlayer"}, {"$ref": "#/components/Row"},
+        {"$ref": "#/components/Column"}, {"$ref": "#/components/List"}, {"$ref": "#/components/Card"},
+        {"$ref": "#/components/Tabs"}, {"$ref": "#/components/Modal"}, {"$ref": "#/components/Divider"},
+        {"$ref": "#/components/Button"}, {"$ref": "#/components/TextField"}, {"$ref": "#/components/CheckBox"},
+        {"$ref": "#/components/ChoicePicker"}, {"$ref": "#/components/Slider"}, {"$ref": "#/components/DateTimeInput"},
+        {"$ref": "#/components/Chart"}, {"$ref": "#/components/Table"}, {"$ref": "#/components/Stat"},
+        {"$ref": "#/components/Badge"}, {"$ref": "#/components/Timeline"}, {"$ref": "#/components/WeekGrid"},
+        {"$ref": "#/components/Markdown"}, {"$ref": "#/components/Link"}, {"$ref": "#/components/ParamBar"}
+      ],
+      "discriminator": {"propertyName": "component"}
+    },
+    "anyFunction": {
+      "oneOf": [
+        {"$ref": "#/functions/required"}, {"$ref": "#/functions/regex"}, {"$ref": "#/functions/length"},
+        {"$ref": "#/functions/numeric"}, {"$ref": "#/functions/email"}, {"$ref": "#/functions/formatString"},
+        {"$ref": "#/functions/formatNumber"}, {"$ref": "#/functions/formatCurrency"}, {"$ref": "#/functions/formatDate"},
+        {"$ref": "#/functions/pluralize"}, {"$ref": "#/functions/openUrl"}, {"$ref": "#/functions/and"},
+        {"$ref": "#/functions/or"}, {"$ref": "#/functions/not"}
+      ]
+    }
+  }
+}

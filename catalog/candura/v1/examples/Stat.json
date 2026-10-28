@@ -1,0 +1,14 @@
+[
+  {"version": "v0.9.1", "createSurface": {"surfaceId": "example-stat", "catalogId": "https://candura.dev/a2ui/catalogs/candura/v1/catalog.json", "theme": {"primaryColor": "#ff7f6e", "surfaceColor": "#ffffff", "radius": "md"}}},
+  {"version": "v0.9.1", "updateComponents": {"surfaceId": "example-stat", "components": [
+    {"id": "root", "component": "Row", "children": ["k_alunos", "k_adesao", "k_sessoes", "k_foco", "k_receita"]},
+    {"id": "k_alunos", "component": "Stat", "label": "Alunos", "value": {"path": "/resumo/alunos_total"}},
+    {"id": "k_adesao", "component": "Stat", "label": "Adesão média", "value": {"path": "/resumo/adesao_media_pct"}, "format": "percent", "delta": {"path": "/resumo/adesao_delta"}, "trend": {"path": "/resumo/adesao_trend"}, "tone": {"path": "/resumo/adesao_tone"}},
+    {"id": "k_sessoes", "component": "Stat", "label": "Sessões no mês", "value": 18, "trend": "up", "delta": "+3"},
+    {"id": "k_foco", "component": "Stat", "label": "Foco médio", "value": 72, "format": "percent", "caption": "Meta 80%", "tone": "warning"},
+    {"id": "k_receita", "component": "Stat", "label": "Volume (kg)", "value": {"path": "/resumo/volume"}, "unit": "kg", "trend": "flat"}
+  ]}},
+  {"version": "v0.9.1", "updateDataModel": {"surfaceId": "example-stat", "path": "/", "value": {
+    "resumo": {"alunos_total": 3, "adesao_media_pct": 62.9, "adesao_delta": "+3.1 pp", "adesao_trend": "up", "adesao_tone": "warning", "volume": 35400}
+  }}}
+]

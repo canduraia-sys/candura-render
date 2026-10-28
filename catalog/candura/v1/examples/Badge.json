@@ -1,0 +1,16 @@
+[
+  {"version": "v0.9.1", "createSurface": {"surfaceId": "example-badge", "catalogId": "https://candura.dev/a2ui/catalogs/candura/v1/catalog.json", "theme": {"primaryColor": "#ff7f6e", "surfaceColor": "#ffffff", "radius": "md"}}},
+  {"version": "v0.9.1", "updateComponents": {"surfaceId": "example-badge", "components": [
+    {"id": "root", "component": "Row", "children": ["b_neutral", "b_primary", "b_success", "b_warning", "b_danger", "b_info", "b_binding"]},
+    {"id": "b_neutral", "component": "Badge", "text": "Arquivado", "tone": "neutral"},
+    {"id": "b_primary", "component": "Badge", "text": "Em foco", "tone": "primary"},
+    {"id": "b_success", "component": "Badge", "text": "Ativo", "tone": "success"},
+    {"id": "b_warning", "component": "Badge", "text": "Atenção", "tone": "warning"},
+    {"id": "b_danger", "component": "Badge", "text": "Desafiador", "tone": "danger"},
+    {"id": "b_info", "component": "Badge", "text": "Novo", "tone": "info"},
+    {"id": "b_binding", "component": "Badge", "text": {"path": "/status/texto"}, "tone": {"path": "/status/tom"}}
+  ]}},
+  {"version": "v0.9.1", "updateDataModel": {"surfaceId": "example-badge", "path": "/", "value": {
+    "status": {"texto": "Adaptativo", "tom": "success"}
+  }}}
+]

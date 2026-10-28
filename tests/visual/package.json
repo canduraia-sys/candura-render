@@ -1,0 +1,15 @@
+{
+  "name": "@candura/a2ui-visual-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Testes visuais (Playwright) do renderizador sobre os exemplos do catálogo Candura v1.",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:update": "playwright test --update-snapshots"
+  },
+  "devDependencies": {
+    "@candura/a2ui-app": "workspace:*",
+    "@playwright/test": "1.64.1"
+  }
+}

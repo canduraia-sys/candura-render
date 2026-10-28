@@ -1,0 +1,28 @@
+{
+  "name": "@candura/a2ui-viewer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "View Viewer: mostra uma view A2UI (fonte colada, URI do registry ou endpoint) com dados simulados.",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "echo 'viewer: coberto pelos testes visuais' && exit 0"
+  },
+  "dependencies": {
+    "@candura/a2ui-render-shadcn": "workspace:*",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.3.3",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3",
+    "vite": "8.3.5",
+    "vite-plugin-singlefile": "2.3.4"
+  }
+}
