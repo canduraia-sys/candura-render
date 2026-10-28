@@ -1,10 +1,10 @@
 import {
-  Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart, PolarAngleAxis, PolarGrid,
-  Radar, RadarChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis,
+  Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Label, Legend, Line, LineChart, Pie, PieChart, PolarAngleAxis,
+  PolarGrid, Radar, RadarChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
 import { createComponentImplementation } from "@a2ui/react/v0_9";
 import { formatDate, formatValue, type ValueFormat } from "../format";
-import { SERIES_TONES, toneColor, toneOf } from "../tones";
+import { chartColor, seriesColor, toneOf } from "../tones";
 import { ChartApi } from "./api";
 
 type Row = Record<string, unknown>;
@@ -14,6 +14,15 @@ interface Series {
   color: string;
 }
 const HEIGHTS: Record<string, number> = { sm: 180, md: 260, lg: 360 };
+/** Eixos, legenda e tooltip na paleta da POC (marrom suave, borda creme, cartão com raio). */
+const AXIS = { stroke: "var(--cd-border)", tick: { fill: "var(--cd-axis)", fontSize: 11 }, tickLine: false } as const;
+const LEGEND_STYLE = { fontSize: 12, color: "var(--cd-muted)" };
+/** Texto da legenda na cor do texto secundário (a cor da série fica no ícone; o coral claro ilegível não vai ao texto). */
+const legendText = (value: unknown) => <span style={{ color: "var(--cd-muted)" }}>{String(value)}</span>;
+const TOOLTIP_STYLE = {
+  background: "var(--cd-surface)", border: "1px solid var(--cd-border)", borderRadius: 12,
+  boxShadow: "0 10px 15px -3px rgb(255 127 110 / 0.12)", color: "var(--cd-text)",
+};
 
 /** As séries de `y`: chave, lista de chaves ou de `{key, label, tone}`; ausente = toda chave numérica exceto `x`. */
 export function seriesOf(y: unknown, rows: Row[], x: string): Series[] {
@@ -26,7 +35,7 @@ export function seriesOf(y: unknown, rows: Row[], x: string): Series[] {
   return specs.map((spec, index) => ({
     key: spec.key,
     label: spec.label ?? spec.key,
-    color: toneColor(spec.tone ? toneOf(spec.tone) : (SERIES_TONES[index % SERIES_TONES.length] ?? "primary")),
+    color: spec.tone ? chartColor(toneOf(spec.tone)) : seriesColor(index),
   }));
 }
 
@@ -39,30 +48,35 @@ export const Chart = createComponentImplementation(ChartApi, ({ props }) => {
   const valueFormat = (props.yFormat ?? "number") as ValueFormat;
   const tick = (value: unknown) => formatValue(value, valueFormat, props.unit);
   const xTick = (value: unknown) => (props.xFormat === "date" ? formatDate(value) : String(value));
-  const legend = props.legend ? <Legend /> : null;
-  const grid = <CartesianGrid strokeDasharray="3 3" />;
+  const legend = props.legend ? (
+    <Legend iconType="square" iconSize={10} wrapperStyle={LEGEND_STYLE} itemSorter={null} formatter={legendText} />
+  ) : null;
+  const grid = <CartesianGrid strokeDasharray="4 4" stroke="var(--cd-border)" vertical={false} />;
+  const tooltip = { contentStyle: TOOLTIP_STYLE, labelStyle: { color: "var(--cd-text)", fontWeight: 600 } };
   const reference = props.reference as { value: number; label?: string; tone?: string } | undefined;
   const guide = reference ? (
-    <ReferenceLine y={reference.value} label={reference.label} stroke={toneColor(toneOf(reference.tone, "warning"))} strokeDasharray="4 4" />
+    <ReferenceLine y={reference.value} label={reference.label} stroke={chartColor(toneOf(reference.tone, "warning"))} strokeDasharray="4 4" />
   ) : null;
   // Barras e áreas medem a partir de zero (eixo truncado exagera diferenças); linhas acompanham os dados.
   const baseline = props.variant === "bar" || props.variant === "horizontalBar" || props.variant === "area";
   const domain = (props.yDomain as [number, number] | undefined) ?? (baseline ? [0, "auto"] : ["auto", "auto"]);
   // Sem animação para quem pede menos movimento (e nos testes visuais, que emulam `reducedMotion: "reduce"`).
   const animate = !(typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
-  const axisWidth = props.unit || valueFormat === "currency" ? 76 : 52;
+  const axisWidth = "auto" as const; // a largura do eixo acompanha o maior rótulo (sem "10.000 kg" cortado)
+  const total = rows.reduce((sum, row) => sum + (Number(row[series[0]?.key ?? "value"]) || 0), 0);
   let chart;
   switch (props.variant) {
     case "pie": {
       const [first] = series;
       chart = (
         <PieChart>
-          <Pie isAnimationActive={animate} data={rows} dataKey={first?.key ?? "value"} nameKey={props.x} innerRadius={props.donut ? "55%" : 0} label={props.showValues}>
+          <Pie isAnimationActive={animate} data={rows} dataKey={first?.key ?? "value"} nameKey={props.x} innerRadius={props.donut ? "62%" : 0} label={props.showValues} stroke="var(--cd-surface)" strokeWidth={2}>
             {rows.map((row, index) => (
-              <Cell key={index} fill={toneColor(props.toneKey ? toneOf(row[props.toneKey]) : (SERIES_TONES[index % SERIES_TONES.length] ?? "primary"))} />
+              <Cell key={index} fill={props.toneKey ? chartColor(toneOf(row[props.toneKey])) : seriesColor(index)} />
             ))}
+            {props.donut ? <Label value={tick(total)} position="center" className="cd-chart-center" fill="var(--cd-text)" fontSize={28} fontWeight={800} /> : null}
           </Pie>
-          <Tooltip formatter={tick} />
+          <Tooltip formatter={tick} {...tooltip} />
           {legend}
         </PieChart>
       );
@@ -71,8 +85,8 @@ export const Chart = createComponentImplementation(ChartApi, ({ props }) => {
     case "radar":
       chart = (
         <RadarChart data={rows}>
-          <PolarGrid />
-          <PolarAngleAxis dataKey={props.x} />
+          <PolarGrid stroke="var(--cd-border)" />
+          <PolarAngleAxis dataKey={props.x} tick={{ fill: "var(--cd-axis)", fontSize: 11 }} />
           {series.map((s) => (
             <Radar isAnimationActive={animate} key={s.key} dataKey={s.key} name={s.label} stroke={s.color} fill={s.color} fillOpacity={0.25} />
           ))}
@@ -84,9 +98,9 @@ export const Chart = createComponentImplementation(ChartApi, ({ props }) => {
       chart = (
         <AreaChart data={rows}>
           {grid}
-          <XAxis dataKey={props.x} tickFormatter={xTick} />
-          <YAxis tickFormatter={tick} domain={domain} width={axisWidth} />
-          <Tooltip formatter={tick} labelFormatter={xTick} />
+          <XAxis dataKey={props.x} tickFormatter={xTick} {...AXIS} />
+          <YAxis tickFormatter={tick} domain={domain} width={axisWidth} {...AXIS} />
+          <Tooltip formatter={tick} labelFormatter={xTick} {...tooltip} />
           {series.map((s) => (
             <Area isAnimationActive={animate} key={s.key} dataKey={s.key} name={s.label} stroke={s.color} fill={s.color} stackId={props.stacked ? "s" : undefined} connectNulls={props.connectNulls} />
           ))}
@@ -101,12 +115,12 @@ export const Chart = createComponentImplementation(ChartApi, ({ props }) => {
       chart = (
         <BarChart data={rows} layout={horizontal ? "vertical" : "horizontal"}>
           {grid}
-          {horizontal ? <XAxis type="number" tickFormatter={tick} domain={domain} /> : <XAxis dataKey={props.x} tickFormatter={xTick} />}
-          {horizontal ? <YAxis type="category" dataKey={props.x} width={120} /> : <YAxis tickFormatter={tick} domain={domain} width={axisWidth} />}
-          <Tooltip formatter={tick} labelFormatter={xTick} />
+          {horizontal ? <XAxis type="number" tickFormatter={tick} domain={domain} {...AXIS} /> : <XAxis dataKey={props.x} tickFormatter={xTick} {...AXIS} />}
+          {horizontal ? <YAxis type="category" dataKey={props.x} width="auto" {...AXIS} /> : <YAxis tickFormatter={tick} domain={domain} width={axisWidth} {...AXIS} />}
+          <Tooltip formatter={tick} labelFormatter={xTick} {...tooltip} />
           {series.map((s) => (
-            <Bar isAnimationActive={animate} key={s.key} dataKey={s.key} name={s.label} fill={s.color} stackId={props.stacked ? "s" : undefined} label={props.showValues ? { position: horizontal ? "right" : "top" } : false}>
-              {props.toneKey ? rows.map((row, index) => <Cell key={index} fill={toneColor(toneOf(row[props.toneKey ?? ""]))} />) : null}
+            <Bar isAnimationActive={animate} key={s.key} dataKey={s.key} name={s.label} fill={s.color} radius={props.stacked ? 0 : [5, 5, 0, 0]} maxBarSize={28} stackId={props.stacked ? "s" : undefined} label={props.showValues ? { position: horizontal ? "right" : "top" } : false}>
+              {props.toneKey ? rows.map((row, index) => <Cell key={index} fill={chartColor(toneOf(row[props.toneKey ?? ""]))} />) : null}
             </Bar>
           ))}
           {guide}
@@ -119,9 +133,9 @@ export const Chart = createComponentImplementation(ChartApi, ({ props }) => {
       chart = (
         <LineChart data={rows}>
           {grid}
-          <XAxis dataKey={props.x} tickFormatter={xTick} />
-          <YAxis tickFormatter={tick} domain={domain} width={axisWidth} />
-          <Tooltip formatter={tick} labelFormatter={xTick} />
+          <XAxis dataKey={props.x} tickFormatter={xTick} {...AXIS} />
+          <YAxis tickFormatter={tick} domain={domain} width={axisWidth} {...AXIS} />
+          <Tooltip formatter={tick} labelFormatter={xTick} {...tooltip} />
           {series.map((s) => (
             <Line isAnimationActive={animate} key={s.key} dataKey={s.key} name={s.label} stroke={s.color} connectNulls={props.connectNulls} dot={false} />
           ))}

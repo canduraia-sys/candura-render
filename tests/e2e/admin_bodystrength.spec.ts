@@ -24,7 +24,8 @@ test("o painel do personal desenha as três abas e os gráficos com os números 
   const erros = semErros(page);
   await page.goto(publicacao());
 
-  await expect(page.getByText("Administração · 2026-08-31 a 2026-10-26")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Administração" })).toBeVisible();
+  await expect(page.getByText("31/08/2026 a 26/10/2026 · 8 semanas")).toBeVisible();
   await expect(page.locator(".cd-stat")).toHaveCount(5);
   await expect(kpi(page, "Execuções")).toContainText("35");
   await expect(kpi(page, "Adesão média")).toContainText("62,9%");
@@ -51,6 +52,6 @@ test("a troca de período na ParamBar refaz o GET e atualiza os KPIs", async ({ 
   await page.locator("#cd-param-semanas").selectOption("12");
   await pedido;
 
-  await expect(page.getByText("Administração · 2026-08-03 a 2026-10-26")).toBeVisible();
+  await expect(page.getByText("03/08/2026 a 26/10/2026 · 12 semanas")).toBeVisible();
   await expect(kpi(page, "Execuções")).toContainText("47");
 });

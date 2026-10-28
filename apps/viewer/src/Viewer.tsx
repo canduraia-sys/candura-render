@@ -7,7 +7,7 @@
  * `CANDURA_A2UI_VIEWER=true` fora de produção.
  */
 import { useEffect, useState } from "react";
-import { CanduraSurface } from "@candura/a2ui-render-shadcn";
+import { CanduraAppHeader, CanduraSurface } from "@candura/a2ui-render-shadcn";
 
 type Source = "source" | "uri" | "endpoint";
 type Tab = "messages" | "data_model" | "issues";
@@ -113,8 +113,11 @@ export function Viewer() {
         {error ? <p className="vw-issues" role="alert">{error}</p> : null}
       </aside>
       <main className="vw-main">
-        <div className="vw-frame" data-viewport={viewport}>
-          {preview?.messages.length ? <CanduraSurface messages={preview.messages} /> : <p>Escolha uma fonte e recarregue.</p>}
+        <div className="vw-frame cd-page" data-viewport={viewport}>
+          <CanduraAppHeader homeHref="#" />
+          <div className="cd-page-main">
+            {preview?.messages.length ? <CanduraSurface messages={preview.messages} /> : <p>Escolha uma fonte e recarregue.</p>}
+          </div>
         </div>
         {preview ? (
           <section>

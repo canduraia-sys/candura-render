@@ -15,5 +15,16 @@ export function toneColor(tone: Tone): string {
   return `var(--cd-tone-${tone})`;
 }
 
-/** Paleta das séries sem tom declarado, na ordem. */
-export const SERIES_TONES: readonly Tone[] = ["primary", "info", "success", "warning", "danger", "neutral"];
+/** A cor de um tom num gráfico: os tons vivos da POC (`--cd-chart-<tom>`); `neutral` é o coral claro de séries de
+ * referência (planejado, meta), sem competir com a série principal. */
+export function chartColor(tone: Tone): string {
+  return `var(--cd-chart-${tone}, var(--cd-tone-${tone}))`;
+}
+
+/** Paleta das séries sem tom declarado, na ordem (a da POC: coral, verde, azul, amarelo, lilás, laranja). */
+export const SERIES_COLORS: readonly string[] = [1, 2, 3, 4, 5, 6].map((n) => `var(--cd-series-${n})`);
+
+/** A cor da série `index` sem tom declarado. */
+export function seriesColor(index: number): string {
+  return SERIES_COLORS[index % SERIES_COLORS.length] ?? "var(--cd-series-1)";
+}

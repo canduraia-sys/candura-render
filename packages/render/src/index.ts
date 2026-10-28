@@ -12,6 +12,7 @@ export { ThemeSchema, canduraCatalog, canduraComponents, type CanduraTheme } fro
 export { RenderContext, safeHref, useRenderOptions, type ParamValues, type RenderOptions } from "./context";
 export { ViewRequestError, fetchSurface, withQuery, type FetchOptions, type SurfaceResponse } from "./client";
 export { CanduraSurface, CanduraView, type CanduraSurfaceProps, type CanduraViewProps } from "./CanduraSurface";
+export { CanduraAppHeader, type CanduraAppHeaderProps } from "./AppHeader";
 export { formatDate, formatValue, type ValueFormat } from "./format";
 export { TONES, toneOf, type Tone } from "./tones";
 export { themeStyle } from "./theme";

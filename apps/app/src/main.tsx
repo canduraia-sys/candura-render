@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { CanduraSurface, CanduraView } from "@candura/a2ui-render-shadcn";
+import { CanduraAppHeader, CanduraSurface, CanduraView } from "@candura/a2ui-render-shadcn";
 import "@candura/a2ui-render-shadcn/styles.css";
 import { routeOf } from "./routes";
 
@@ -19,8 +19,11 @@ function App() {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <main style={{ maxWidth: 1100, margin: "0 auto", padding: 16 }}>
-      <App />
-    </main>
+    <div className="cd-page">
+      <CanduraAppHeader />
+      <main className="cd-page-main">
+        <App />
+      </main>
+    </div>
   </StrictMode>,
 );

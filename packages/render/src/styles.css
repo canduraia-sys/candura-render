@@ -4,34 +4,98 @@
  */
 @import "tailwindcss";
 
+/*
+ * Paleta da POC da neurodiv (design aprovado em 2026-10-28): fundo creme `#fff9f8`, texto marrom `#433430`, borda
+ * `#fce4de`, coral `#ff7f6e`, cartões com raio 2,5 × o do tema (20 px no padrão `md`) e sombra coral suave, Inter.
+ * Tons de texto (`--cd-tone-*`) são escuros o bastante para 4,5:1 sobre branco; os de gráfico (`--cd-chart-*`) são os
+ * vivos da POC. A surface é sempre clara: o tema Basic do A2UI seguiria o modo escuro do sistema (`color-scheme: light
+ * dark`) e deixaria títulos claros sobre cartões brancos; por isso as variáveis `--a2ui-*` apontam para os tokens daqui.
+ */
 .cd-surface {
+  color-scheme: light;
   --cd-primary: #ff7f6e;
+  --cd-primary-dark: #e66a5c;
   --cd-surface: #ffffff;
+  --cd-page: #fff9f8;
   --cd-radius: 8px;
-  --cd-text: #18181b;
-  --cd-muted: #71717a;
-  --cd-border: #e4e4e7;
-  --cd-tone-neutral: #71717a;
-  --cd-tone-primary: var(--cd-primary);
-  --cd-tone-success: #16a34a;
-  --cd-tone-warning: #d97706;
-  --cd-tone-danger: #dc2626;
-  --cd-tone-info: #2563eb;
+  --cd-card-radius: calc(var(--cd-radius) * 2.5);
+  --cd-text: #433430;
+  --cd-muted: #7d635b;
+  --cd-axis: #8a6f68;
+  --cd-border: #fce4de;
+  --cd-border-strong: #f3cfc6;
+  --cd-shadow: 0 4px 15px -3px rgb(255 127 110 / 0.08);
+  --cd-tone-neutral: #6b5a55;
+  --cd-tone-primary: #c4554a;
+  --cd-tone-success: #15803d;
+  --cd-tone-warning: #8a5a00;
+  --cd-tone-danger: #c2410c;
+  --cd-tone-info: #0369a1;
+  --cd-chart-neutral: #ffd5cd;
+  --cd-chart-primary: var(--cd-primary);
+  --cd-chart-success: #22c55e;
+  --cd-chart-warning: #eab308;
+  --cd-chart-danger: #ef4444;
+  --cd-chart-info: #60a5fa;
+  --cd-series-1: var(--cd-primary);
+  --cd-series-2: #4ade80;
+  --cd-series-3: #60a5fa;
+  --cd-series-4: #facc15;
+  --cd-series-5: #a78bfa;
+  --cd-series-6: #fb923c;
+  /* Basic do A2UI (Text, Card, Tabs, Row...) pelos mesmos tokens */
   --a2ui-color-primary: var(--cd-primary);
+  --a2ui-color-background: var(--cd-page);
+  --a2ui-color-on-background: var(--cd-text);
+  --a2ui-color-surface: var(--cd-surface);
+  --a2ui-color-on-surface: var(--cd-text);
+  --a2ui-color-border: var(--cd-border);
+  --a2ui-text-color-text: var(--cd-text);
+  --a2ui-text-caption-color: var(--cd-muted);
+  --a2ui-color-input: var(--cd-surface);
+  --a2ui-color-on-input: var(--cd-text);
+  --a2ui-color-secondary: #fdf0ec;
+  --a2ui-color-on-secondary: var(--cd-text);
+  --a2ui-border-radius: var(--cd-radius);
+  --a2ui-card-background: var(--cd-surface);
+  --a2ui-card-border: 1px solid var(--cd-border);
+  --a2ui-card-border-radius: var(--cd-card-radius);
+  --a2ui-card-box-shadow: var(--cd-shadow);
+  --a2ui-card-padding: 1.25rem;
+  --a2ui-card-margin: 0;
   color: var(--cd-text);
-  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .cd-card {
   background: var(--cd-surface);
   border: 1px solid var(--cd-border);
-  border-radius: var(--cd-radius);
-  padding: 1rem;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+  border-radius: var(--cd-card-radius);
+  padding: 1.25rem;
+  box-shadow: var(--cd-shadow);
 }
+
+/* Um componente de dados dentro de um `Card` do Basic não desenha o próprio cartão (sem moldura dupla). */
+.cd-surface .a2ui-card .cd-card { border: 0; box-shadow: none; padding: 0; background: transparent; border-radius: 0; }
+
+/* Linhas: cartões e gráficos ocupam a largura disponível (o Basic só faz crescer quem declara `weight`). */
+.cd-surface a2ui-basic-row { gap: 0.75rem; }
+.cd-surface a2ui-basic-row > a2ui-card,
+.cd-surface a2ui-basic-row > * > .cd-chart,
+.cd-surface a2ui-basic-row > * > .cd-table-wrap { flex: 1 1 22rem; min-width: 0; }
+
+/* Títulos e legendas do Basic na tipografia da POC */
+.cd-surface :where(h1, h2, h3, h4, h5) { color: var(--cd-text); margin: 0; }
+.cd-surface h1 { font-size: 1.75rem; font-weight: 800; }
+.cd-surface h2 { font-size: 1.5rem; font-weight: 800; }
+.cd-surface h3 { font-size: 1.125rem; font-weight: 600; }
+.cd-surface .a2ui-text-caption, .cd-surface .a2ui-text-caption em { font-style: normal; color: var(--cd-muted); font-size: 0.875rem; }
+/* A surface nunca força a largura do contêiner (o `ResponsiveContainer` cresceria em laço numa coluna `1fr`). */
+.cd-surface { min-width: 0; }
+.cd-page-main { min-width: 0; }
 
 [data-tone="neutral"] { --cd-tone: var(--cd-tone-neutral); }
 [data-tone="primary"] { --cd-tone: var(--cd-tone-primary); }
@@ -45,7 +109,10 @@
 /* Linhas do Basic quebram em telas estreitas: os indicadores vão para a linha de baixo em vez de transbordar. */
 .cd-surface a2ui-basic-row { flex-wrap: wrap; }
 .cd-stat-label, .cd-caption { color: var(--cd-muted); font-size: 0.8125rem; }
-.cd-stat-value { font-size: clamp(1.25rem, 5vw, 1.75rem); font-weight: 600; line-height: 1.1; white-space: nowrap; }
+.cd-stat-label { font-size: 0.75rem; font-weight: 600; }
+.cd-stat-value { font-size: clamp(1.25rem, 5vw, 1.75rem); font-weight: 800; line-height: 1.1; white-space: nowrap; }
+.cd-stat-delta { align-self: flex-start; font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.5rem; border-radius: 999px;
+  background: color-mix(in srgb, var(--cd-tone, var(--cd-tone-neutral)) 12%, transparent); }
 @media (max-width: 480px) {
   .cd-card { padding: 0.75rem; }
   .cd-stat-label, .cd-caption { font-size: 0.75rem; }
@@ -60,8 +127,10 @@
 
 .cd-table-wrap { overflow-x: auto; padding: 0; }
 .cd-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
-.cd-table th { text-align: left; color: var(--cd-muted); font-weight: 500; padding: 0.625rem 0.75rem; border-bottom: 1px solid var(--cd-border); }
+.cd-table th { text-align: left; color: var(--cd-muted); font-weight: 600; font-size: 0.75rem; padding: 0.625rem 0.75rem; border-bottom: 1px solid var(--cd-border); }
 .cd-table td { padding: 0.625rem 0.75rem; border-bottom: 1px solid var(--cd-border); }
+/* Células numa linha: a tabela larga rola dentro do cartão (no celular) em vez de quebrar palavra a palavra. */
+.cd-table :where(th, td) { white-space: nowrap; }
 .cd-table [data-align="right"] { text-align: right; }
 .cd-table [data-align="center"] { text-align: center; }
 .cd-table [data-width="narrow"] { width: 6rem; }
@@ -71,7 +140,9 @@
 }
 
 .cd-chart { margin: 0; }
-.cd-chart-title { font-weight: 600; margin-bottom: 0.5rem; }
+.cd-chart-title { font-weight: 600; font-size: 1.05rem; color: var(--cd-text); margin-bottom: 0.75rem; }
+.cd-chart-center { font-family: inherit; }
+.cd-tooltip { background: var(--cd-surface); border: 1px solid var(--cd-border); border-radius: 12px; box-shadow: 0 10px 15px -3px rgb(255 127 110 / 0.12); }
 
 .cd-timeline { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
 .cd-timeline-item { border-left: 3px solid var(--cd-tone, var(--cd-border)); padding-left: 0.75rem; display: flex; flex-direction: column; }
@@ -94,3 +165,27 @@
 
 .cd-empty, .cd-loading { color: var(--cd-muted); }
 .cd-error { color: var(--cd-tone-danger); }
+
+/* Barra do topo das páginas de view (`CanduraAppHeader`): coral escuro com a linha coral, texto claro. */
+.cd-app-header {
+  color-scheme: light;
+  background: #c4554a;
+  border-bottom: 3px solid #ff7f6e;
+  box-shadow: 0 6px 18px -8px rgb(67 52 48 / 0.45);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+.cd-app-header-inner {
+  max-width: 1180px; margin: 0 auto; padding: 0.75rem 1.25rem; min-height: 4rem; box-sizing: border-box;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem;
+}
+.cd-app-brand { display: flex; align-items: center; gap: 0.625rem; text-decoration: none; color: #ffffff; }
+.cd-app-brand-text { display: flex; flex-direction: column; line-height: 1.05; }
+.cd-app-brand-name { font-size: 1rem; font-weight: 800; letter-spacing: -0.01em; }
+.cd-app-brand-sdk { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.14em; color: #ffd9d2; }
+.cd-app-divider { width: 1px; height: 2rem; background: rgb(255 255 255 / 0.22); }
+.cd-app-title { margin: 0; font-size: 1.25rem; font-weight: 800; letter-spacing: -0.01em; color: #ffffff; }
+.cd-app-product { color: #ffc2b8; }
+
+/* Página que hospeda uma surface (app web, moldura do viewer): fundo creme e coluna centrada. */
+.cd-page { background: #fff9f8; min-height: 100%; }
+.cd-page-main { max-width: 1180px; margin: 0 auto; padding: 2rem 1.25rem 3rem; box-sizing: border-box; }
