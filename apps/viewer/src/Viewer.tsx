@@ -3,8 +3,9 @@
  *
  * Três fontes — JSON/JSONL colado, URI do registry (autocompletar por `GET /candura/v1/a2ui/views`) ou endpoint de
  * rota — enviadas ao `POST /candura/v1/a2ui/preview` do SDK com a chave do servidor; à direita, a view renderizada e
- * as abas de mensagens, modelo de dados e problemas. Ferramenta de desenvolvimento: o SDK só a serve com
- * `CANDURA_A2UI_VIEWER=true` fora de produção.
+ * as abas de mensagens, modelo de dados e problemas. Ferramenta de desenvolvimento: a página é servida pelo frontend
+ * (nginx, alvo `dev`, ou `pnpm --filter @candura/a2ui-viewer dev`) em `/candura/v1/a2ui/viewer`; o SDK só atende o
+ * preview com `CANDURA_A2UI_VIEWER=true` fora de produção.
  */
 import { useEffect, useState } from "react";
 import { CanduraAppHeader, CanduraSurface } from "@candura/a2ui-render-shadcn";
